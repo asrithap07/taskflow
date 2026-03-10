@@ -25,13 +25,13 @@ export default function Home() {
         <Sidebar theme={theme} onToggleTheme={setTheme} />
 
         {/* Main Task Board 
-          Passing a function to onOpenAI that opens the AI assistant
-          by setting aiOpen to true
+          Render the TaskBoard component, and give it a function called onOpenAI. 
+          When that function runs, open the AI assistant.
         */}
         
-        {/*<div className="flex-1 min-w-0">*/}
-          {/*<TaskBoard onOpenAI={() => setAiOpen(true)} />*/}
-        {/*</div>*/}
+        <div className="flex-1 min-w-0">
+          <TaskBoard onOpenAI={() => setAiOpen(true)} />
+        </div>
 
         {/* AI Assist Panel 
           Only renders when aiOpen is true.

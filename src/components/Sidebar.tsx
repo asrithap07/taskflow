@@ -126,7 +126,9 @@ export default function Sidebar({ theme, onToggleTheme }) {
 
 
       {/* Upgrade Card */}
-      {!collapsed && (
+  
+      {/* {!collapsed && (
+        
         <div className="mt-4 bg-indigo-500 rounded-xl p-3 text-white relative overflow-hidden">
           <div className="absolute -right-3 -top-3 w-14 h-14 bg-indigo-400 rounded-full opacity-30" />
           <div className="absolute -right-1 top-4 w-8 h-8 bg-indigo-300 rounded-full opacity-20" />
@@ -139,7 +141,8 @@ export default function Sidebar({ theme, onToggleTheme }) {
             <ChevronRightIcon size={12} className="text-indigo-500" />
           </button>
         </div>
-      )}
+      )} */}
+      
 
       {/* Bottom */}
       <div className="mt-4 flex flex-col gap-1">
