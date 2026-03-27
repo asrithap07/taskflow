@@ -19,6 +19,8 @@ import {
   ChevronRight as ChevronRightIcon,
 } from "lucide-react";
 
+import AddTaskModal from "@/components/AddTaskModal"
+
 const NAV_ITEMS = [
   { icon: CalendarDays, label: "Today" },
   { icon: CalendarClock, label: "Upcoming" },
@@ -32,6 +34,7 @@ const PROJECTS = [
 export default function Sidebar({ theme, onToggleTheme }) {
   const [collapsed, setCollapsed] = useState(false);
   const [active, setActive] = useState("Today");
+  const [isModalOpen, setModalOpen] = useState(false);
 
   return (
     <aside
@@ -71,6 +74,7 @@ export default function Sidebar({ theme, onToggleTheme }) {
       <nav className="flex flex-col gap-0.5 mb-4">
         {/* Add Task button */}
         <button
+          onClick={() =>setModalOpen(true)}
           className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-bold text-indigo-600 hover:bg-indigo-100 transition-colors w-full text-left mb-1"
         >
           <CirclePlus size={15} className="text-indigo-500 flex-shrink-0" />
@@ -202,6 +206,13 @@ export default function Sidebar({ theme, onToggleTheme }) {
           </div>
         )}
       </div>
+      {isModalOpen && (
+              <AddTaskModal
+                onClose={() => setModalOpen(false)}
+                onAdd={(task) => addTask(task)}
+              />
+            )}
     </aside>
+    
   );
 }
