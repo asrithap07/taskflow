@@ -1,50 +1,55 @@
 "use client";
 import { useState} from "react";
-import AIAssist from "@/components/AIAssistant"
+import AIAssistant from "@/components/AIAssistant"
 import Sidebar from "@/components/Sidebar"
 import TaskBoard from "@/components/Taskboard"
+import {TaskProvider, useTasks} from "@/context/TaskContext"
+
 
 export default function Home() {
   const [theme, setTheme] = useState("light");
   const [aiOpen, setAiOpen] = useState(true);
 
-  return (
-    
-    <div
-      className={`min-h-screen flex items-center justify-center p-6 transition-colors duration-300 ${
-        theme === "dark" ? "bg-gray-900" : "bg-gray-100"
-      }`}
-    >
+  return (   
+    //sidebar and taskboard components are passed to TaskProvider as the children prop
+    //now both Sidebar and TaskBoard can access the value object wuth all the tasks and functions that TaskProvider passes to its children
+    <TaskProvider> 
       <div
-        className="flex gap-4 w-full max-w-6xl"
-        style={{ height: "calc(100vh - 3rem)" }}
+        className={`min-h-screen flex items-center justify-center p-6 transition-colors duration-300 ${
+          theme === "dark" ? "bg-gray-900" : "bg-gray-100"
+        }`}
       >
-        {/* Sidebar 
-          giving the sidebar the current theme and passing the function that changes the theme
-        */}
-        <Sidebar theme={theme} onToggleTheme={setTheme} />
+        <div
+          className="flex gap-4 w-full max-w-6xl"
+          style={{ height: "calc(100vh - 3rem)" }}
+        >
+          {/* Sidebar 
+            giving the sidebar the current theme and passing the function that changes the theme
+          */}
+          <Sidebar theme={theme} onToggleTheme={setTheme} />
 
-        {/* Main Task Board 
-          Render the TaskBoard component, and give it a function called onOpenAI. 
-          When that function runs, open the AI assistant.
-        */}
-        
-        <div className="flex-1 min-w-0">
-          <TaskBoard onOpenAI={() => setAiOpen(true)} />
-        </div>
-
-        {/* AI Assist Panel 
-          Only renders when aiOpen is true.
-          Passing onClose so the component can hide itself
-          by setting aiOpen to false.
-        */}
-        {/*
-        {aiOpen && (
-          <div className="w-72 flex-shrink-0">
-            <AIAssist onClose={() => setAiOpen(false)} />
+          {/* Main Task Board 
+            Render the TaskBoard component, and give it a function called onOpenAI. 
+            When that function runs, open the AI assistant.
+          */}
+          
+          <div className="flex-1 min-w-0">
+            <TaskBoard onOpenAI={() => setAiOpen(true)} />
           </div>
-        )}*/}
+
+          {/* AI Assist Panel 
+            Only renders when aiOpen is true.
+            Passing onClose so the component can hide itself
+            by setting aiOpen to false.
+          */}
+          {/*
+          {aiOpen && (
+            <div className="w-72 flex-shrink-0">
+              <AIAssist onClose={() => setAiOpen(false)} />
+            </div>
+          )}*/}
+        </div>
       </div>
-    </div>
+    </TaskProvider>
   );
 }

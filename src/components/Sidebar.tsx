@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 
 import AddTaskModal from "@/components/AddTaskModal"
+import {useTasks} from "@/context/TaskContext"
 
 const NAV_ITEMS = [
   { icon: CalendarDays, label: "Today" },
@@ -31,10 +32,12 @@ const PROJECTS = [
   { icon: "🧑‍💻", label: "Code Project" },
 ];
 
-export default function Sidebar({ theme, onToggleTheme }) {
+export default function Sidebar({ onAddTask, theme, onToggleTheme }) {
   const [collapsed, setCollapsed] = useState(false);
   const [active, setActive] = useState("Today");
   const [isModalOpen, setModalOpen] = useState(false);
+  const { addTask } = useTasks();
+  
 
   return (
     <aside
@@ -209,7 +212,10 @@ export default function Sidebar({ theme, onToggleTheme }) {
       {isModalOpen && (
               <AddTaskModal
                 onClose={() => setModalOpen(false)}
-                onAdd={(task) => addTask(task)}
+                onAdd={(task) => {
+                  addTask(task); //call the onAdd prop that calls addTask to update the tasks state
+                  setModalOpen(false); //close the modal after adding
+                }}
               />
             )}
     </aside>

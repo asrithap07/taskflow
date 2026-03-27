@@ -2,68 +2,17 @@
 import React from "react";
 import {useState} from "react";
 import { Focus, Sparkles, Plus, Info, Trash2, Check } from "lucide-react";
+import { useTasks } from "@/context/TaskContext";
 import TaskItem from "@/components/TaskItem"
 import AddTaskModal from "@/components/AddTaskModal"
  
-const INITIAL_TASKS = [
-    {
-        id: 1, 
-        label: "Create UI", 
-        priority: "high", 
-        project: "CS Project", 
-        tags: ["career", "coding"],
-        done: false
-    },
-    {
-        id: 2,
-        label: "Apply to 2 summer internships",
-        priority: "low",
-        project: null,
-        tags: ["career"],
-        done: false
-    },
-    {
-        id: 3,
-        label: "go to the gym",
-        priority: "medium",
-        project: null,
-        tags: ["life"],
-        done: true
-    }
- ]
+
 
 export default function TaskBoard({onOpenAI}) {
-    const [tasks, setTasks] = useState(INITIAL_TASKS);
     const [newTask, setNewTask] = useState("");
     const [isModalOpen, setModalOpen] = useState(false);
-
-    //the function takes a task id
-    const toggleDone = (id) =>
-        // we are calling setTasks and giving it a function that takes the prev tasks state and calculates a new one from it
-        setTasks((prev) =>
-            //we use map to go through every tasks and if that task id 
-            // matches the curretn one we are toggling, then we return a new object that is toggled as  
-            // otherwise we leave it as the same
-            prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
-        );
-    
-    //the function deleteTask takes a task id
-    const deleteTask = (id) =>
-        //we call setTasks and give it a function that takes the prev tasjs
-        //it returns a list of tasks that ids dont match the id given to deleteTask
-        setTasks((prev) => prev.filter((t) => t.id !== id));
-
-    //take the current tasks and add a new one to the end
-    const addTask = ({label, priority, dueDate, tags}) => {
-        //add new task to state -> set tasks to be all the previous tasks along with this new task at the end
-        setTasks((prev) => [
-            //copy all previous tasks
-            ...prev,
-            // create the new task object and use Date.now() to track id so its easier
-            {id: Date.now(), label: label, priority: priority, project: null, tags: tags, done: false}
-        ])
-        //setNewTask("");
-    };
+    //call useTasks() to get the value from the context provider
+    const { tasks, addTask, toggleDone, deleteTask, finishAll } = useTasks();
 
     return (
     <div className="flex flex-col h-full bg-white rounded-2xl shadow-sm p-6">
@@ -149,13 +98,7 @@ export default function TaskBoard({onOpenAI}) {
       <div className="mt-4 flex items-center gap-2">
         {/*finish button*/}
         <button 
-          onClick={() => {
-            //sets everything to done
-            setTasks((prev) =>
-                //the parentheces around the object tells javascript to reutn this object
-                prev.map((t) =>  ({...t, done: true}))
-            );
-          }}
+          onClick={finishAll}
           className="px-5 py-2 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition-colors">
           Finish
         </button>
@@ -177,7 +120,11 @@ export default function TaskBoard({onOpenAI}) {
       {isModalOpen && (
         <AddTaskModal
           onClose={() => setModalOpen(false)}
-          onAdd={(task) => addTask(task)}
+          onAdd={(task) => 
+          {
+            addTask(task);
+            setModalOpen(false);
+          }}
         />
       )}
     </div>
