@@ -3,6 +3,7 @@ import React from "react";
 import {useState} from "react";
 import { Focus, Sparkles, Plus, Info, Trash2, Check } from "lucide-react";
 import TaskItem from "@/components/TaskItem"
+import AddTaskModal from "@/components/AddTaskModal"
  
 const INITIAL_TASKS = [
     {
@@ -34,6 +35,7 @@ const INITIAL_TASKS = [
 export default function TaskBoard({onOpenAI}) {
     const [tasks, setTasks] = useState(INITIAL_TASKS);
     const [newTask, setNewTask] = useState("");
+    const [isModalOpen, setModalOpen] = useState(false);
 
     //the function takes a task id
     const toggleDone = (id) =>
@@ -52,17 +54,15 @@ export default function TaskBoard({onOpenAI}) {
         setTasks((prev) => prev.filter((t) => t.id !== id));
 
     //take the current tasks and add a new one to the end
-    const addTask = (label) => {
-        //if the newTask is empty, then just return bc theres nothing to add
-        if (!newTask.trim()) return;
+    const addTask = ({label, priority, dueDate, tags}) => {
         //add new task to state -> set tasks to be all the previous tasks along with this new task at the end
         setTasks((prev) => [
             //copy all previous tasks
             ...prev,
             // create the new task object and use Date.now() to track id so its easier
-            {id: Date.now(), label: newTask.trim(), priority: "low", project: null, tags: [], done: false}
+            {id: Date.now(), label: label, priority: priority, project: null, tags: tags, done: false}
         ])
-        setNewTask("");
+        //setNewTask("");
     };
 
     return (
@@ -147,6 +147,7 @@ export default function TaskBoard({onOpenAI}) {
 
       {/*Footer Actions*/}
       <div className="mt-4 flex items-center gap-2">
+        {/*finish button*/}
         <button 
           onClick={() => {
             //sets everything to done
@@ -158,13 +159,9 @@ export default function TaskBoard({onOpenAI}) {
           className="px-5 py-2 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition-colors">
           Finish
         </button>
+        {/* add task button */}
         <button
-          onClick={() => {
-            //creates a window prompt asking for new task name
-            const label = prompt("New task name?");
-            //if theres a task then 
-            if (label) addTask(label);
-          }}
+          onClick={() =>setModalOpen(true)}
           className="flex items-center gap-1.5 px-3 py-2 text-xs text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
         >
           <Plus size={13} />
@@ -174,6 +171,15 @@ export default function TaskBoard({onOpenAI}) {
           <Info size={14} />
         </button>
       </div>
+      {/* if isModelOpen is true then we render the addTaskModal
+      we pass in a function that calls setModalOpen(false) for the onClose argument
+      we pass in a function that accepts a parameter called task from AddTaskModal's onAdd call and then calls addTask in taskboard.tsx with that task from AddTaskModal */}
+      {isModalOpen && (
+        <AddTaskModal
+          onClose={() => setModalOpen(false)}
+          onAdd={(task) => addTask(task)}
+        />
+      )}
     </div>
   );
 }

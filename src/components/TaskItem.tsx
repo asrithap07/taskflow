@@ -1,7 +1,9 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
+import React from "react";
 
+//design system for the priorities
 const PRIORITY_STYLES = {
   high: {
     dot: "bg-red-400",
@@ -20,7 +22,7 @@ const PRIORITY_STYLES = {
   },
 };
 
-// Distinct, soft color palette for tags — separate from priority colors
+//tag color palette
 const TAG_COLORS = [
   "text-yellow-600",
   "text-lime-600",
@@ -31,14 +33,22 @@ const TAG_COLORS = [
   "text-orange-500",
 ];
 
-// Deterministically pick a color per tag name so the same tag is always the same color
+//picking a color for each tag
 function getTagColor(tag) {
   let hash = 0;
-  for (let i = 0; i < tag.length; i++) hash += tag.charCodeAt(i);
+  //here we make the hash for the tag using each of its character values
+  for (let i = 0; i < tag.length; i++) {
+    hash += tag.charCodeAt(i);
+  }
+  //use modulo to assign it to one of the TAG_COLORS, 
+  // now this tag will always get that color bc of its unique hashcode
   return TAG_COLORS[hash % TAG_COLORS.length];
 }
 
+//here we are making a component called TaskItem that receives a task object, a function to toggle it, and a function to delete it 
+// (its called by taskboard)
 export default function TaskItem({ task, onToggle, onDelete }) {
+  //get this style task.priority for this task's priority and if that doesn't exist, sue the low priority style instead.
   const priority = PRIORITY_STYLES[task.priority] ?? PRIORITY_STYLES.low;
   const hasTags = task.tags && task.tags.length > 0;
 
@@ -81,7 +91,7 @@ export default function TaskItem({ task, onToggle, onDelete }) {
             {task.tags.map((tag, i) => (
               <span key={tag} className="flex items-center gap-1">
                 {i > 0 && <span className="text-gray-300 text-xs">•</span>}
-                <span className={`text-[12px] font-medium ${getTagColor(tag)}`}>
+                <span className={`text-[12px] font-medium ${task.done ? "text-gray-300" : getTagColor(tag)}`}>
                   {tag}
                 </span>
               </span>
@@ -93,9 +103,12 @@ export default function TaskItem({ task, onToggle, onDelete }) {
       {/* Right: priority badge + project name */}
       <div className="flex flex-col items-end gap-1 flex-shrink-0">
         <span
-          className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1 ${priority.badge}`}
+          className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1 ${task.done
+        ? "bg-gray-50 text-gray-300 border border-gray-100"
+        : priority.badge
+        }`}
         >
-          <span className={`w-1.5 h-1.5 rounded-full ${priority.dot}`} />
+          <span className={`w-1.5 h-1.5 rounded-full ${task.done ? "bg-gray-200" : priority.dot}`} />
           {priority.label}
         </span>
 
