@@ -2,7 +2,7 @@
 
 A warm, native-feeling daily task driver with an embedded AI coach.
 
-**Live demo:** [sidekick-seven-rho.vercel.app/today](https://sidekick-seven-rho.vercel.app/today)
+**Live demo:** [https://sidekick-productivity.vercel.app/today](https://sidekick-productivity.vercel.app/today)
 
 Sidekick is a daily task and planning app for solo knowledge workers — the place you open each morning to see today's plan, upcoming work, and project context, with an AI sidekick that helps you prioritize, break down goals, and stay on track. It's built to replace a general-purpose todo app for daily use, not to demo AI features.
 
